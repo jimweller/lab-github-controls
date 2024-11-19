@@ -1,0 +1,81 @@
+# Branch, commit, and PR linting/checking
+
+name: Git Standards Check
+on:
+
+  pull_request:
+    types: [assigned, opened, edited, synchronize, reopened]
+
+  workflow_dispatch:
+
+#permissions:
+#  pull-requests: read # needed by 
+
+jobs:
+
+  validate-git-standards:
+
+    # skip work done by dependabot
+    if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/github_actions/') == false)
+
+
+    name: Validate git standards
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # a https://github.com/wagoid/commitlint-github-action?tab=readme-ov-file
+      # b https://www.npmjs.com/package/@commitlint/config-conventional
+      # c https://www.conventionalcommits.org/en/v1.0.0/#summary
+      #
+      # See .commitlintrc.yml file for rules enforced
+
+      - name: Assert conventional commit formatting rules
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: .commitlintrc.yml
+
+      # https://github.com/lekterable/branchlint-action 
+      #
+      # I would reserve releases and skip-release for semantic version which is
+      # based on conventional commit messages and not branch names
+      #
+      # I would add try/ which will run an alternate pipeline to deploy to a
+      # "try environment" a disconntected  ephemeral environment for
+      # experimenting with ideas or testing risky changes before moving them to
+      # a standard pipeline.
+
+      - name: Assert branch naming rules
+        uses: lekterable/branchlint-action@2.1.0 # pending issue to maintainer to get major version tags for this action https://github.com/lekterable/branchlint-action/issues/9
+        with:
+          # this regex says one of the types, a slash /, a jira card, and  a description of only letters, numbers, and hyphens
+          # note, don't use continuous hyphens like -- or --- (not in regex yet)
+          # note, don't end in a hyphen (not in regex yet)
+          # type/jira-987-words-numbers-123-and-more-words-456
+          allowed: /^(feat|fix|try)\/[a-z]+-[0-9]+[0-9a-z-]+$/        
+          errorMessage: 'Branch name must start with fix/, feat/, or try/ followed by a JIRA card followed by only letters, numbers and hyphens. Example: fix/jira-1234-fix-the-broken-thing.'
+          # this is the original enablement standard
+          # allowed: /^(release|feat|fix|skip-release)\/[a-z]+-[0-9]+[0-9a-z-]+$/        
+          # errorMessage: 'Branch name must start with `fix/`, `feat/`, or `release/` - `skip-release/` (will skip the release workflow) and be followed by a JIRA card. Example: fix/jira-1234-fix-the-broken-thing.'
+
+      # PR naming conventions should mimic conventional commits
+      # then use the "squash merge" option in github enabling "PR title and commit details"
+      - name: Assert PR title naming rules
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        # run: |
+        #   pr_title="${{ github.event.pull_request.title }}"
+        #   # type: jira-987 word numbers 123 and? symbols!
+        #   pr_regex="^(feat|fix|try): [a-z]+-[0-9].*$"
+        #   pr_error_message="The subject for the pull request does not meeting naming rules. Example \"fix: jira-1234 fix that bug! Right?\"  "
+        #   if [[ ! $pr_title =~ $pr_regex ]]
+        #   then
+        #     echo $pr_error_message
+        #     exit 1
+        #   else
+        #     echo "PR title complies with team git standards"
+        #   fi

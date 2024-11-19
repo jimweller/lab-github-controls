@@ -1,0 +1,16 @@
+
+# This should only return bad ones (and these comments)
+# cat branch-samples.txt | grep -vE  '^(release|feat|fix|skip-release)\/[A-Z]+-[0-9]+[0-9a-zA-Z-]+$'
+
+fix/JIRA-123-good-bug-fix
+feat/JIRA-123-good-feature-add
+release/JIRA-123-good-release
+skip-release/JIRA-123-good-skip-release
+
+doh/JIRA-124-bad-key-word
+fix-bad-slash-missing
+fix/bad-jira-cards-missing
+fix/JIRA-123 bad has spaces
+fix/123-JIRA-bad-jira-card-format-reversed
+fix/JIRA-bad-jira-card-format-missing-number
+

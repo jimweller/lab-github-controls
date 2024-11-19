@@ -1,0 +1,17 @@
+tests:
+  - name: type missing
+    value: jira-123-missing-type
+  - name: type upper case
+    value: FEAT/jira-123-not-lowercase-type
+  - name: type invalid
+    value: BUG/jira-123-invalid-type
+  - name: jira missing
+    value: feat/missing-jira-card
+  - name: not lowercase
+    value: feat/jira-123-UPPERCASE-not-allowed  
+  - name: no spaces allowed
+    value: feat/jira-123 spaces not allowed
+  - name: no symbols allowed
+    value: feat/jira-12-symbols-not-allowed-!_+?
+  - name: VALID BRANCH NAME
+    value: feat/jira-123-this-is-a-valid-branch

@@ -1,0 +1,50 @@
+tests:
+  - name: type is missing
+    value: |
+      this subject is missing a type
+  - name: type is not valid
+    value: |
+      bug: this type is not valid
+  - name: type is not lower case
+    value: |
+      CHORE: this type is not valid
+  - name: subject is empty
+    value: '-'
+  - name: subject is not lower case
+    value: |
+      chore: This Subject Is Not LOWERCASE
+  - name: subject ends with a period
+    value: |
+      chore: no periods.
+  - name: subject is too long
+    value: |
+      chore: 72 chars is all and this subject is too long way way way way way way way too long
+  - name: body is too long
+    value: |
+      chore: the body below is too long
+
+      72 chars is all and this subject is too long way way way way way way wayway way way way way way wayway way way way way way wayway way way way way way wayway way way way way way wayway way way way way way too long
+  - name: blank line between subject and body
+    value: |
+      chore: blank line after this
+      blank line before this
+  - name: footer is too long
+    value: |
+      chore: the body below is too long
+
+      the footer below is too long
+      
+      BREAKING CHANGE THIS FOOTER IS TOO LONG WAY WAY WAY WAY WAY WAY WAYWAY WAY WAY WAY WAY WAY WAYWAY WAY WAY WAY WAY WAY TOO LONG
+  - name: blank line between subject and footer
+    value: |
+      chore: the subject and body are missing a blank line in between
+
+      blank line after this
+      BREAKING CHANGE BLANK LINE BEFORE THIS
+  - name: VALID COMMIT MESSAGE
+    value: |
+      chore: this is a valid commit subject
+
+      this is a valid commit body
+
+      BREAKING CHANGE IS A VALID FOOTER

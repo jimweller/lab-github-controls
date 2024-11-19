@@ -1,0 +1,29 @@
+{
+    "branch": "main",
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "eslint",
+          "releaseRules": [
+              { "tag": "fix", "release": "patch" },
+              { "tag": "feat", "release": "minor" },
+              { "tag": "release", "release": "major" }
+  ]
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "eslint",
+          "releaseRules": [
+                { "tag": "fix", "release": "patch" },
+                { "tag": "feat", "release": "minor" },
+                { "tag": "release", "release": "major" }
+            ]
+        }
+      ],
+      "@semantic-release/github", 
+      "semantic-release-major-tag"
+    ]
+  }

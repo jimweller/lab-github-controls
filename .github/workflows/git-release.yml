@@ -1,0 +1,44 @@
+# Workflow to perform semantic release versioning and tagging within github
+# according to the rules in .releaserc.json.
+#
+# This github action does not work on protected branches without elevated
+# permissions where there are a variety of ways to do this at the repo level,
+# team level or org level.
+#
+# https://gonzalohirsch.com/blog/semantic-release-and-branch-protection-rules/
+#
+#
+# running on merge instead of push to main. doesn't work with semantic release.
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-pull_request-workflow-when-a-pull-request-merges
+
+name: Git Semantic Release
+
+# switch between these two "on" event triggers
+# to try it in a non-protected branch repo
+on:
+  push:
+    branches: [ main ]
+  # run, manually, aka disabled for CI/CD
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+
+
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@main
+        id: semantic
+        with:
+          extra_plugins: |
+            semantic-release-major-tag
+            conventional-changelog-eslint
+          branches: |
+            ['main']
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
